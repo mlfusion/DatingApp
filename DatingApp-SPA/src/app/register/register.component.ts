@@ -27,7 +27,7 @@ model: any = {};
 
     }, error => {
 
-      UIkit.notification({message: error.error,
+      UIkit.notification({message: error,
       status: 'danger',
       pos: 'bottom-right'});
 

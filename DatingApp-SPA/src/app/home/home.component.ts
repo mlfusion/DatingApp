@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   }
 
   cancelRegister(registerMode: boolean) {
+    console.log('emit value: ' + registerMode);
     this.registerMode = false;
   }
 

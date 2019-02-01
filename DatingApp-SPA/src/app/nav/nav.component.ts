@@ -1,5 +1,6 @@
 import { AuthService } from './../_services/auth.service';
 import { Component, OnInit } from '@angular/core';
+import UIkit from 'uikit';
 
 @Component({
   selector: 'app-nav',
@@ -19,7 +20,12 @@ model: any = {};
       next => {
         console.log('login succefully');
       }, error => {
-        console.error('failed to login');
+
+        UIkit.notification({message: error,
+      status: 'danger',
+      pos: 'bottom-right'});
+
+      console.error(error);
       }
     );
   }
