@@ -1,0 +1,60 @@
+<nav class="uk-navbar-container" uk-navbar>
+
+  <div class="uk-navbar-left">
+
+      <a class="uk-navbar-item uk-logo" href="#">Dating App</a>
+
+      <ul class="uk-navbar-nav">
+          <li>
+              <a href="#">
+                <span class="uk-icon uk-margin-small-right" uk-icon="home"></span>
+                  Matches
+              </a>
+          </li>
+
+          <li>
+              <a href="#">
+                  <span class="uk-icon uk-margin-small-right" uk-icon="icon: list"></span>
+                  Lists
+              </a>
+          </li>
+
+          <li>
+              <a href="#">
+                  <span class="uk-icon uk-margin-small-right" uk-icon="icon: comments"></span>
+                  Messages
+              </a>
+          </li>
+
+          <li>
+                <a href="#" (click)='logout()'>
+                    <span class="uk-icon uk-margin-small-right" uk-icon="icon: comments"></span>
+                    Logout
+                </a>
+            </li>
+      </ul>
+
+    </div>
+
+    <div class="uk-navbar-right mr-3">
+
+    <div *ngIf="loggedIn()" class="dropdown uk-text-uppercase uk-text-muted">
+            <a class="dropdown-toggle">
+                Welcome user, 
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Edit Profile</a>
+                <div class="dropdown-divider"> </div>
+                <a class="dropdown-item" href="#"><i class="fa fa-sign-out"></i> Logout</a>
+            </div>
+        </div>
+
+
+        <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()">
+            <input class="uk-input form-control mr-sm-2" name="username" type="text" placeholder="Username" required [(ngModel)]="model.username">
+            <input class="uk-input form-control mr-sm-2" name="password" type="password" placeholder="Password" required [(ngModel)]="model.password">
+            <button [disabled]="!loginForm.valid" class="uk-button uk-button-primary" type="submit">Login</button>
+        </form>
+    </div>
+    
+</nav>
