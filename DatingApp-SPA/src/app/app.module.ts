@@ -1,3 +1,4 @@
+import { UserService } from './_services/user.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { NotificationService } from './_services/notification.service';
@@ -47,7 +48,8 @@ import { appRoutes } from './routes';
       AuthService,
       NotificationService,
       ErrorInterceptorProvider,
-      AuthGuard
+      AuthGuard,
+      UserService
    ],
    bootstrap: [
       AppComponent
