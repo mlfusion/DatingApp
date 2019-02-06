@@ -1,6 +1,9 @@
 import { AuthService } from './../_services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import UIkit from 'uikit';
+import { NotificationService } from '../_services/notification.service';
+import { Router } from '@angular/router';
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'app-nav',
@@ -10,34 +13,36 @@ import UIkit from 'uikit';
 export class NavComponent implements OnInit {
 model: any = {};
 
-  constructor(private authSerice: AuthService) { }
+  constructor(public authService: AuthService, private notificationService: NotificationService,
+              private router: Router) { }
 
   ngOnInit() {
   }
 
   login() {
-    this.authSerice.login(this.model).subscribe(
+    this.authService.login(this.model).subscribe(
       next => {
-        console.log('login succefully');
+        console.log('login successfully');
+        this.notificationService.success('Logged in successfully');
       }, error => {
-
-        UIkit.notification({message: error,
-      status: 'danger',
-      pos: 'bottom-right'});
-
-      console.error(error);
+        this.notificationService.error(error);
+        console.error(error);
+      }, () => {
+        this.model = {};
+        this.router.navigate(['/members']);
       }
     );
   }
 
   loggedIn() {
-    const token = localStorage.getItem('token');
-    return !! token;
-  }
+   return this.authService.loggedIn();
+ }
 
   logout() {
     localStorage.removeItem('token');
+    this.notificationService.success('Logout successfully');
     console.log('logout');
+    this.router.navigate(['/home']);
   }
 
 }

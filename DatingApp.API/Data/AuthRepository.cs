@@ -50,7 +50,7 @@ namespace DatingApp.API.Data
         
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-            user.Created = DateTime.Now;
+            //user.Created = DateTime.Now;
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();

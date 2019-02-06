@@ -9,6 +9,12 @@
     <button class="uk-button uk-button-danger">Danger</button>
     <button class="uk-button uk-button-text">Text</button>
     <button class="uk-button uk-button-link">Link</button>
+
+    <button class="uk-button uk-button-default" (click)='warning()'>Warning</button>
+    <button class="uk-button uk-button-primary" (click)='alert()'>Alert</button>
+    <button class="uk-button uk-button-default" (click)='confirm()'>Confirm</button>
+    <button class="uk-button uk-button-primary" (click)='success()'>Success</button>
+    <button class="uk-button uk-button-danger" (click)='model()'>Open Model</button>
 </p>
 
 <div></div>
@@ -26,4 +32,6 @@
   </div>
 
 </div>
+
+<app-value-model [vall]='val' (openSuccess)='success()' ></app-value-model>
 
