@@ -14,7 +14,7 @@ constructor(private authService: AuthService, private router: Router,
             private notificationService: NotificationService) {}
 
 canActivate(): boolean {
-  if (this.authService.loggedIn()){
+  if (this.authService.loggedIn()) {
     return true;
   }
 

@@ -57,7 +57,7 @@ namespace DatingApp.API.Controllers
             var login = await _repository.Login(loginDto.Username.ToLower(), loginDto.Password);
 
             if (login == null)
-                return Unauthorized();
+                return NotFound("No match for username and password was found.");
 
             var claims = new[]
             {
