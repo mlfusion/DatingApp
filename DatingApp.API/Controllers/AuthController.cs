@@ -63,8 +63,7 @@ namespace DatingApp.API.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, login.Id.ToString()),
                 new Claim(ClaimTypes.Name, login.Username),
-                new Claim(ClaimTypes.Role, "Admin")
-          
+                new Claim(ClaimTypes.Role, "Admin")        
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8

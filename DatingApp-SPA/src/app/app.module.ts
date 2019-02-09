@@ -1,3 +1,4 @@
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 
 import { UserService } from './_services/user.service';
 import { AuthGuard } from './_guards/auth.guard';
@@ -8,6 +9,8 @@ import { environment } from 'src/environments/environment';
 
 import { MemberListResolver } from './_resolver/member-list-resolvers';
 import { MemberDetailResolver } from './_resolver/member-detail-resolvers';
+import { MemberEditResolver } from './_resolver/member-edit-resolvers';
+
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -18,6 +21,7 @@ import { RouterModule } from '@angular/router';
 import { appRoutes } from './routes';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgxGalleryModule } from 'ngx-gallery';
+import { FileUploadModule } from 'ng2-file-upload';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -31,7 +35,8 @@ import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
-
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 
 export function tokenGetters() {
    return localStorage.getItem('token');
@@ -49,7 +54,9 @@ export function tokenGetters() {
       ListsComponent,
       MessagesComponent,
       MemberCardComponent,
-      MemberDetailComponent
+      MemberDetailComponent,
+      MemberEditComponent,
+      PhotoEditorComponent
    ],
    imports: [
       BrowserModule,
@@ -57,6 +64,7 @@ export function tokenGetters() {
       HttpClientModule,
       FormsModule,
       NgxGalleryModule,
+      FileUploadModule,
       TabsModule.forRoot(),
       BsDropdownModule.forRoot(),
       RouterModule.forRoot(appRoutes),
@@ -73,9 +81,11 @@ export function tokenGetters() {
       NotificationService,
       ErrorInterceptorProvider,
       AuthGuard,
+      PreventUnsavedChanges,
       UserService,
       MemberDetailResolver,
       MemberListResolver,
+      MemberEditResolver
    ],
    bootstrap: [
       AppComponent

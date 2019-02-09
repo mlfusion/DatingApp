@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using DatingApp.API.Business;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -51,6 +52,12 @@ namespace DatingApp.API
             // Added IDatingRepository Service
             services.AddScoped<IDatingRepository, DatingRepository>();
 
+            // Added IPhotoRepository Service
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
+
+            // Added IPhotoBus
+            services.AddScoped<IPhotoBus, PhotoBus>();
+
             // Add Cors
             services.AddCors();
 
@@ -59,6 +66,9 @@ namespace DatingApp.API
 
             // Add AutoMapper
             services.AddAutoMapper();
+
+            // Get ClouldinarySettings from appsettings.json
+            services.Configure<CloudinarySettings>(Configuration.GetSection("ClouldinarySettings"));
 
             // Jwt Authentication
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -101,7 +111,12 @@ namespace DatingApp.API
             
             //app.UseHttpsRedirection();
             //seeder.SeedUsers();
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
+            // app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
+            app.UseCors(x => x.WithOrigins("http://localhost:4200")
+                .AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+                
             app.UseAuthentication();
             app.UseMvc();
         }

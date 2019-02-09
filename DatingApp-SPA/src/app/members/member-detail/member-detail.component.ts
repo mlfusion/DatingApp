@@ -20,7 +20,7 @@ galleryImages: NgxGalleryImage[];
 
   ngOnInit() {
     // this.getUser();
-    // Usering resolver to get user
+    // Using resolver to get user
     this.route.data.subscribe(data => {
       this.user = data['user'];
     });
