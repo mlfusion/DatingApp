@@ -13,9 +13,11 @@ namespace DatingApp.API.Models
         public string Url { get; set; } 
         public string Description { get; set; }
         public DateTime Created { get; set; }
+        public DateTime? Modified {get;set;}
         public bool IsMain { get; set; }
         public string PublicId { get; set; }
         public User User { get; set; }
+       // public Comment Comment {get;set;}
         public int UserId { get; set; }
     }
 }

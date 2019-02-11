@@ -1,0 +1,46 @@
+<div class="container" mt-5>
+
+    <!-- <form class="form-inline">
+        <div class="form-group mb-2">
+          <label for="staticEmail2" class="sr-only">Email</label>
+          <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="email@example.com">
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+          <label for="inputPassword2" class="sr-only">Password</label>
+          <input type="password" class="form-control" id="inputPassword2" placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
+    </form> -->
+
+  <form>
+      <div class="form-group row justify-content-end mb-5">
+        <div class="col-6 mb-2">
+            <input class="form-control h-100" type="search" placeholder="Search by username" aria-label="Search">
+        </div>
+        <div class="col-2 mb-2">
+          <button class="btn btn-outline-primary" type="submit">Search</button>
+        </div>
+      </div>
+  </form>
+
+  <div class="clearfix"></div>
+
+    <div class="row">
+      <div *ngFor="let photo of photos" class="col-lg-2 col-md-3 col-sm-6">
+          <div class="card mb-4">
+              <div class="card-img-wrapper">
+                <img class="card-img-top" src="{{photo.url || '../../../assets/user.png'}}" alt="{{photo.id}}">
+                <div class="card-body text-center">
+                    <button type="button" class="btn btn-sm mr-1" 
+                      [ngClass]="photo.isMain ? 'btn-default active' : 'btn-outline-primary'"
+                      (click)="setMainPhoto(photo)" 
+                      [disabled]="photo.isMain"><i class="fa fa-check"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                      [disabled]="photo.isMain"
+                      (click)="deletePhoto(photo.id)"><i class="fa fa-trash-o"></i></button>
+                  </div>
+              </div>
+            </div>
+      </div>
+    </div>
+  </div>

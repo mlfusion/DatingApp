@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DatingApp.API.Models;
@@ -38,12 +39,48 @@ namespace DatingApp.API.Data
             return await _context.Photos.FirstOrDefaultAsync(where);
         }
 
+        public async Task<Photo> GetPhoto(Expression<Func<Photo, bool>> filter = null, 
+                        Func<IQueryable<Photo>, IOrderedQueryable<Photo>> orderBy = null, 
+                        params Expression<Func<Photo, object>>[] includes)
+        {
+            IQueryable<Photo> query = _context.Set<Photo>();
+    
+            foreach (Expression<Func<Photo, object>> include in includes)
+                query = query.Include(include);
+    
+            if (filter != null)
+                query = query.Where(filter);
+    
+            if (orderBy != null)
+                query = orderBy(query);
+    
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<Photo>> GetPhotos()
         {
             var obj = await _context.Photos.ToListAsync(); 
             
             return obj;
         }
+
+   public async Task<IEnumerable<Photo>> GetPhotos(Expression<Func<Photo, bool>> filter = null, 
+                    Func<IQueryable<Photo>, IOrderedQueryable<Photo>> orderBy = null, 
+                    params Expression<Func<Photo, object>>[] includes)
+    {
+        IQueryable<Photo> query = _context.Set<Photo>();
+ 
+        foreach (Expression<Func<Photo, object>> include in includes)
+            query = query.Include(include);
+ 
+        if (filter != null)
+            query = query.Where(filter);
+ 
+        if (orderBy != null)
+            query = orderBy(query);
+ 
+        return await query.ToListAsync();
+    }
 
         public async Task<bool> SaveAll()
         {

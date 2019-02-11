@@ -12,11 +12,13 @@ import {NgForm} from '@angular/forms';
 })
 export class NavComponent implements OnInit {
 model: any = {};
+photoUrl: string;
 
   constructor(public authService: AuthService, private notificationService: NotificationService,
               private router: Router) { }
 
   ngOnInit() {
+    this.authService.currentPhotoUrl.subscribe( p => this.photoUrl = p);
   }
 
   login() {
@@ -39,7 +41,7 @@ model: any = {};
  }
 
   logout() {
-    localStorage.removeItem('token');
+    localStorage.clear();
     this.notificationService.success('Logout successfully');
     console.log('logout');
     this.router.navigate(['/home']);

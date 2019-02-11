@@ -10,6 +10,8 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { ListsComponent } from './lists/lists.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { PhotoListComponent } from './photos/photo-list/photo-list.component';
+import { PhotoListResolver } from './_resolver/photo-list-resolvers';
 
 export const appRoutes: Routes = [
     { path: '', component: HomeComponent},
@@ -26,6 +28,7 @@ export const appRoutes: Routes = [
                 resolve: {user: MemberEditResolver}, canDeactivate: [PreventUnsavedChanges]},
             { path: 'messages', component: MessagesComponent},
             { path: 'lists', component: ListsComponent},
+            { path: 'photos', component: PhotoListComponent, resolve: {photos: PhotoListResolver}}
         ]
     },
 

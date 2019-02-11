@@ -104,6 +104,57 @@ namespace DatingApp.API.Business
 
             return photos;
         }
+
+        public async Task<Photo> SetMainPhoto(int userId, int id)
+        {
+            var isMainPhotoCurrent = await _photoRepository.GetPhoto(x => x.IsMain && x.UserId == userId);
+
+            if (isMainPhotoCurrent != null)
+            {
+                isMainPhotoCurrent.IsMain = false;
+                isMainPhotoCurrent.Modified = DateTime.Now;
+            }
+
+            var isMainPhotoUpdate = await _photoRepository.GetPhoto(x => x.Id == id);
+            isMainPhotoUpdate.IsMain = true;
+            isMainPhotoUpdate.Modified = DateTime.Now;
+
+            if (await _photoRepository.SaveAll())
+                return isMainPhotoUpdate;
+
+            return null;
+        }
+
+// List<Model> modelList = _unitOfWork.ModelRepository.Get(m => m.FirstName == "Jan" || m.LastName == "Holinka", includeProperties: "Account")
+        public async Task<Photo> GetMainPhoto(int userId, int id)
+        {
+            var photo = await _photoRepository.GetPhoto(x => x.Id == id && x.IsMain);
+          //  var photos = await _photoRepository.GetPhoto(x => x.Id == id && x.IsMain, null, s => s.Comment, s => s.User);
+
+            return photo;
+        }
+
+        public async Task<Photo> DeletePhoto(int userId, Photo photo)
+        {
+
+            if (photo.PublicId != null)
+            {
+                var deleteParams = new DeletionParams(photo.PublicId);
+
+                var result = _cloudinary.Destroy(deleteParams);
+
+                if(result.Result != "ok")
+                    return null;
+            }
+
+            photo.Modified = DateTime.Now;
+            _photoRepository.Delete(photo);
+
+            if (await _photoRepository.SaveAll())
+                return photo;
+
+            return null;        
+        }
     }
 
     public interface IPhotoBus
@@ -113,5 +164,11 @@ namespace DatingApp.API.Business
         Task<Photo> GetPhoto(int id);
 
         Task<IEnumerable<Photo>> GetPhotos();
+
+         Task<Photo> GetMainPhoto(int userId, int id);
+
+          Task<Photo> SetMainPhoto(int userId, int id);
+
+           Task<Photo> DeletePhoto(int userId, Photo photo);
     }
 }

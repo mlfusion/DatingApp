@@ -1,8 +1,10 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
@@ -19,9 +21,12 @@ namespace DatingApp.API.Controllers
     {
         private readonly IAuthRepository _repository;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository repository, IConfiguration config)
+        private readonly IMapper _mapper;
+
+        public AuthController(IAuthRepository repository, IConfiguration config, IMapper mapper)
         {
             _config = config;
+            _mapper = mapper;
             _repository = repository;
         }
 
@@ -63,7 +68,8 @@ namespace DatingApp.API.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, login.Id.ToString()),
                 new Claim(ClaimTypes.Name, login.Username),
-                new Claim(ClaimTypes.Role, "Admin")        
+                new Claim(ClaimTypes.Role, "Admin")//,
+               // new Claim(ClaimTypes., login.Photos.FirstOrDefault(d => d.IsMain == true).Url )
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8
@@ -82,8 +88,11 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDesciptor);
 
+            var userDto = _mapper.Map<User, UserForListDto>(login);
+
             return Ok(new { 
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                user = userDto
             });
         }
     }

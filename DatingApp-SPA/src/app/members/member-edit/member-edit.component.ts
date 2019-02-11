@@ -14,14 +14,15 @@ import { NgForm } from '@angular/forms';
 export class MemberEditComponent implements OnInit {
 user: User;
 warning: string;
+photoUrl: string;
 @ViewChild('editForm') editForm: NgForm;
+// Set notification when exiting out of the browser
 @HostListener('window:beforeunload', ['$event'])
 unloadNotification($event: any) {
   if (this.editForm.dirty) {
     $event.returnValue = true;
   }
 }
-
 
   constructor(private route: ActivatedRoute,
               private notificationService: NotificationService,
@@ -36,13 +37,12 @@ unloadNotification($event: any) {
       });
 
       this.warning = ' You have made changes.  Any unsaved changes will be lost!';
+      this.authService.currentPhotoUrl.subscribe( p => this.photoUrl = p);
 
   }
 
   updateUser() {
-    // console.log(this.user);
-
-    this.userService.updateUser(this.authService.decodedToken.nameid, this.user).subscribe(next => {
+     this.userService.updateUser(this.authService.decodedToken.nameid, this.user).subscribe(next => {
 
       this.notificationService.success('Profile has been updated.');
 
@@ -53,7 +53,18 @@ unloadNotification($event: any) {
       this.notificationService.error(error);
     });
 
+  }
 
+  updateMainPhoto(status) {
+    console.log('isMainPhoto: ' + status);
+         // Usering resolver to get user
+    // this.route.data.subscribe(data => {
+    //       this.user = data['user'];
+    //     });
+  }
+
+  updatedMainPhoto(photo) {
+   // this.user.photoUrl = photo;
   }
 
 }

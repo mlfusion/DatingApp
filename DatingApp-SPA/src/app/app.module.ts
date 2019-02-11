@@ -1,4 +1,3 @@
-import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 
 import { UserService } from './_services/user.service';
 import { AuthGuard } from './_guards/auth.guard';
@@ -10,7 +9,7 @@ import { environment } from 'src/environments/environment';
 import { MemberListResolver } from './_resolver/member-list-resolvers';
 import { MemberDetailResolver } from './_resolver/member-detail-resolvers';
 import { MemberEditResolver } from './_resolver/member-edit-resolvers';
-
+import { PhotoListResolver } from './_resolver/photo-list-resolvers';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -37,6 +36,10 @@ import { MemberCardComponent } from './members/member-card/member-card.component
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
+import { PhotoListComponent } from './photos/photo-list/photo-list.component';
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { PhotoEditComponent } from './photos/photo-edit/photo-edit.component';
+
 
 export function tokenGetters() {
    return localStorage.getItem('token');
@@ -56,7 +59,9 @@ export function tokenGetters() {
       MemberCardComponent,
       MemberDetailComponent,
       MemberEditComponent,
-      PhotoEditorComponent
+      PhotoEditorComponent,
+      PhotoListComponent,
+      PhotoEditComponent
    ],
    imports: [
       BrowserModule,
@@ -85,7 +90,8 @@ export function tokenGetters() {
       UserService,
       MemberDetailResolver,
       MemberListResolver,
-      MemberEditResolver
+      MemberEditResolver,
+      PhotoListResolver
    ],
    bootstrap: [
       AppComponent
