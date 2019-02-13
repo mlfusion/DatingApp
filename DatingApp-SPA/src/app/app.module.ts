@@ -14,7 +14,7 @@ import { PhotoListResolver } from './_resolver/photo-list-resolvers';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {BsDropdownModule, BsDatepickerModule, TabsModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './routes';
@@ -69,6 +69,7 @@ export function tokenGetters() {
       AppRoutingModule,
       HttpClientModule,
       FormsModule,
+      ReactiveFormsModule,
       NgxGalleryModule,
       FileUploadModule,
       TabsModule.forRoot(),

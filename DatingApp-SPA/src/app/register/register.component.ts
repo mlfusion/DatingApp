@@ -1,8 +1,7 @@
 import { AuthService } from './../_services/auth.service';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import UIkit from 'uikit';
 import { NotificationService } from '../_services/notification.service';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -19,25 +18,44 @@ registerForm: FormGroup;
               private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.registerForm = new FormGroup({
-      username: new FormControl(),
-      password: new FormControl(),
-      confirmPassword: new FormControl()
-    });
+    this.creatRegisterForm();
+    // this.registerForm = new FormGroup({
+    //   username: new FormControl('', Validators.required),
+    //   password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]),
+    //   confirmPassword: new FormControl('', Validators.required)
+    // }, this.passwordMatchValidator);
+  }
+
+  creatRegisterForm() {
+    this.registerForm = this.formBuilder.group({
+      gender: ['male'],
+      username: ['', Validators.required],
+      knownAs: ['', Validators.required],
+      dateOfBirth: [null, Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
+      confirmPassword: ['', Validators.required]
+    }, {validators: this.passwordMatchValidator});
+  }
+
+  passwordMatchValidator(g: FormGroup) {
+    return g.get('password').value === g.get('confirmPassword').value ? null : {nomatch: true};
   }
 
   register() {
-    this.authService.register(this.model).subscribe(res => {
-      console.log(res);
-      this.cancelRegister.emit(false);
+    console.log(this.registerForm.value);
+    // this.authService.register(this.model).subscribe(res => {
+    //   console.log(res);
+    //   this.cancelRegister.emit(false);
 
-      this.notificationService.success('Your registeration was successful');
-    }, error => {
+    //   this.notificationService.success('Your registeration was successful');
+    // }, error => {
 
-      this.notificationService.error(error);
+    //   this.notificationService.error(error);
 
-      console.error(error);
-    });
+    //   console.error(error);
+    // });
   }
 
   cancel() {
