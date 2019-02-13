@@ -68,31 +68,32 @@ export class PhotoEditorComponent implements OnInit {
   setMainPhoto(photo: Photo) {
     // console.log(photo);
     // set photo = true; set old photo = false
-    this.photoService.setMainPhoto(photo.id).subscribe(result => {
-      this.currentMain = this.photos.filter(p => p.isMain === true)[0];
-      this.currentMain.isMain = false;
-      photo.isMain = true;
+    this.noticationService.confirm('Are you sure you want to set this photo to your main profile?', () => {
+      this.photoService.setMainPhoto(photo.id).subscribe(result => {
+        this.currentMain = this.photos.filter(p => p.isMain === true)[0];
+        this.currentMain.isMain = false;
+        photo.isMain = true;
 
-      this.noticationService.success('Photo has been set as main photo.');
+        this.noticationService.success('Photo has been set as main photo.');
 
-      // Code is not in user. Just for template purpose
-      this.isMainPhoto.emit(true);
-      this.updatedMainPhoto.emit(photo.url);
+        // Code is not in user. Just for template purpose
+        this.isMainPhoto.emit(true);
+        this.updatedMainPhoto.emit(photo.url);
 
       // update photo with BehaviorSubject
-      this.authService.changeMemberPhoto(photo.url);
+        this.authService.changeMemberPhoto(photo.url);
 
-      // update user stored in authSevice
-      this.authService.currentusr.photoUrl = photo.url;
-      localStorage.setItem('user', JSON.stringify(this.authService.currentusr));
+        // update user stored in authSevice
+        this.authService.currentusr.photoUrl = photo.url;
+        localStorage.setItem('user', JSON.stringify(this.authService.currentusr));
 
-
-      // set photo in global service
-      // this.authService.photoUrl = photo.url;
-      // localStorage.setItem('photoUrl', photo.url);
-    }, (error) => {
-      this.noticationService.error(error);
-      console.error(error);
+        // set photo in global service
+        // this.authService.photoUrl = photo.url;
+        // localStorage.setItem('photoUrl', photo.url);
+      }, (error) => {
+        this.noticationService.error(error);
+        console.error(error);
+      });
     });
   }
 

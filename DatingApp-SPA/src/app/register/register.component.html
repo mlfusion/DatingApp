@@ -1,22 +1,59 @@
 <div>
 
-<form #registerForm="ngForm" (ngSubmit)="register()">
+<form #registerForm="ngForm" name="form" class="needs-validation" (ngSubmit)="registerForm.form.valid && register()" novalidate>
     <h1 class="text-center">Sign Up</h1>
     <hr>
   
     <div class="form-group">
-      <input type="text" class="form-control mr-sm-2" required name="username" [(ngModel)]="model.username" placeholder="Username">
+      <input type="text" class="form-control mr-sm-2" 
+             #username="ngModel"
+             name="username" 
+             [(ngModel)]="model.username" 
+             placeholder="Username"
+             [ngClass]="{ 'is-invalid': registerForm.submitted && username.invalid }" required>
+             <div *ngIf="registerForm.submitted && username.invalid" class="invalid-feedback">
+                <div *ngIf="username.errors.required">Username is required</div>
+            </div>
     </div>
   
     <div class="form-group">
-      <input type="password" class="form-control mr-sm-2" required name="password" [(ngModel)]="model.password" placeholder="Password">
+      <input type="password" class="form-control mr-sm-2" 
+             #password="ngModel"
+             required name="password" 
+             [(ngModel)]="model.password" 
+             placeholder="Password"
+             [ngClass]="{ 'is-invalid': registerForm.submitted && password.invalid }" required>
+             <div *ngIf="registerForm.submitted && password.invalid" class="invalid-feedback">
+                <div *ngIf="password.errors.required">Password is required</div>
+            </div>
     </div>
   
     <div class="form-group text-center">
-      <button class="btn btn-info mr-2" [disabled]="!registerForm.valid" type="submit">Register</button>
-      <button class="btn btn-primary" type="button" (click)="cancel()">Cancel</button>
+      <button class="btn btn-info mr-2"  type="submit">Register</button>
+      <button class="btn btn-primary" type="button" (click)="cancel()">Cancel</button> 
     </div>
-    
+    <!-- [disabled]="!registerForm.valid" -->
   </form>
 
 </div>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+      'use strict';
+      window.addEventListener('load', function() {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+          form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      }, false);
+    })();
+    </script>

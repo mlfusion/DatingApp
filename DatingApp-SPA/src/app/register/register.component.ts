@@ -1,6 +1,8 @@
 import { AuthService } from './../_services/auth.service';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import UIkit from 'uikit';
+import { NotificationService } from '../_services/notification.service';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -10,10 +12,18 @@ import UIkit from 'uikit';
 export class RegisterComponent implements OnInit {
 model: any = {};
 @Output() cancelRegister = new EventEmitter();
+registerForm: FormGroup;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+              private notificationService: NotificationService,
+              private formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    this.registerForm = new FormGroup({
+      username: new FormControl(),
+      password: new FormControl(),
+      confirmPassword: new FormControl()
+    });
   }
 
   register() {
@@ -21,15 +31,10 @@ model: any = {};
       console.log(res);
       this.cancelRegister.emit(false);
 
-      UIkit.notification({message: 'Your registeration was successful',
-      status: 'success',
-      pos: 'bottom-right'});
-
+      this.notificationService.success('Your registeration was successful');
     }, error => {
 
-      UIkit.notification({message: error,
-      status: 'danger',
-      pos: 'bottom-right'});
+      this.notificationService.error(error);
 
       console.error(error);
     });
