@@ -1,23 +1,27 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DatingApp.API.Base;
+using DatingApp.API.Infrastructure;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Data
 {
-    public class AuthRepository : IAuthRepository
+    public class AuthRepository : Repository<User>, IAuthRepository
     {
-        private readonly DataContext _context;
+        private readonly ILog _log;
 
-        public AuthRepository(DataContext context)
+        public AuthRepository(ILog log, DataContext context) : base(log, context)
         {
-            _context = context;
-
+            _log = log;
         }
+
         public async Task<User> Login(string username, string password)
         {
-            var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.Username == username);
+            //var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.Username == username);
+
+            var user = await base.SelectIncludeAsync(x => x.Username == username, "Photos");
 
             if (user == null)
                 return null;
@@ -52,8 +56,8 @@ namespace DatingApp.API.Data
             user.PasswordSalt = passwordSalt;
             //user.Created = DateTime.Now;
 
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            await base.AddAsync(user);
+            await base.SaveAync(); //_context.SaveChangesAsync();
 
             return user;
         }
@@ -70,7 +74,10 @@ namespace DatingApp.API.Data
 
         public async Task<bool> UserExits(string username)
         {
-            if (await _context.Users.AnyAsync(x => x.Username == username))
+            var ret = await base.SelectAsync(x => x.Username == username);
+
+            if (ret != null)
+           // if (await _context.Users.AnyAsync(x => x.Username == username))
                 return true;
 
             return false;

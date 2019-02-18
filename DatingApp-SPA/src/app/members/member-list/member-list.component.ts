@@ -20,7 +20,7 @@ users: User[];
     // this.getUsers();
         // Usering resolver to get user
         this.route.data.subscribe(data => {
-          this.users = data.users;
+          this.users = data["users"];
         });
   }
 

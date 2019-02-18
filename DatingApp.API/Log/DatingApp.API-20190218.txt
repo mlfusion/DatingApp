@@ -1,0 +1,148 @@
+2019-02-18T09:05:49.8383167-05:00 0HLKLL87IET0S:00000002 [INF] End - Trace Format =  , , 0 (3b039c3b)
+2019-02-18T09:08:02.3129199-05:00 0HLKLL87IET0S:00000004 [INF] End - Trace Format =  , , 0 (3b039c3b)
+2019-02-18T09:08:46.4667921-05:00 0HLKLL87IET0S:00000006 [ERR] An unhandled exception has occurred while executing the request. (48a46595)
+AutoMapper.AutoMapperMappingException: Error mapping types.
+
+Mapping types:
+List`1 -> IEnumerable`1
+System.Collections.Generic.List`1[[DatingApp.API.Models.User, DatingApp.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] -> System.Collections.Generic.IEnumerable`1[[DatingApp.API.Dtos.UserForListDto, DatingApp.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] ---> AutoMapper.AutoMapperMappingException: Error mapping types.
+
+Mapping types:
+User -> UserForListDto
+DatingApp.API.Models.User -> DatingApp.API.Dtos.UserForListDto
+
+Type Map configuration:
+User -> UserForListDto
+DatingApp.API.Models.User -> DatingApp.API.Dtos.UserForListDto
+
+Property:
+Age ---> System.InvalidOperationException: Nullable object must have a value.
+   at System.Nullable`1.get_Value()
+   at DatingApp.API.Helpers.AutoMapperProfiles.<>c.<.ctor>b__0_10(User d) in C:\Mlfusion\Apps\DatingApp.Solution\DatingApp.API\Helpers\AutoMapperProfiles.cs:line 18
+   at lambda_method(Closure , List`1 , IEnumerable`1 , ResolutionContext )
+   --- End of inner exception stack trace ---
+   at lambda_method(Closure , List`1 , IEnumerable`1 , ResolutionContext )
+   --- End of inner exception stack trace ---
+   at lambda_method(Closure , List`1 , IEnumerable`1 , ResolutionContext )
+   at lambda_method(Closure , Object , Object , ResolutionContext )
+   at AutoMapper.Mapper.AutoMapper.IMapper.Map[TDestination](Object source) in C:\projects\automapper\src\AutoMapper\Mapper.cs:line 207
+   at DatingApp.API.Controllers.UsersController.GetUsers() in C:\Mlfusion\Apps\DatingApp.Solution\DatingApp.API\Controllers\UsersController.cs:line 37
+   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeNextActionFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeInnerFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeNextResourceFilter()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeFilterPipelineAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeAsync()
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.InvokeCore(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware.Invoke(HttpContext context)
+2019-02-18T09:08:46.6491886-05:00 0HLKLL87IET0S:00000006 [ERR] An exception was thrown attempting to execute the error handler. (e55ade05)
+System.InvalidOperationException: Invalid non-ASCII or control character in header: 0x000D
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpHeaders.ThrowInvalidHeaderCharacter(Char ch)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpHeaders.ValidateHeaderValueCharacters(StringValues& headerValues)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseHeaders.AddValueFast(String key, StringValues& value)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpHeaders.System.Collections.Generic.IDictionary<System.String,Microsoft.Extensions.Primitives.StringValues>.Add(String key, StringValues value)
+   at DatingApp.API.Helpers.Extensions.AddApplicationError(HttpResponse response, String message) in C:\Mlfusion\Apps\DatingApp.Solution\DatingApp.API\Helpers\Extensions.cs:line 13
+   at DatingApp.API.Startup.<>c.<<Configure>b__5_2>d.MoveNext() in C:\Mlfusion\Apps\DatingApp.Solution\DatingApp.API\Startup.cs:line 123
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware.Invoke(HttpContext context)
+2019-02-18T09:08:46.6616851-05:00 0HLKLL87IET0S:00000006 [ERR] Connection id ""0HLKLL87IET0S"", Request id ""0HLKLL87IET0S:00000006"": An unhandled exception was thrown by the application. (560e7d32)
+AutoMapper.AutoMapperMappingException: Error mapping types.
+
+Mapping types:
+List`1 -> IEnumerable`1
+System.Collections.Generic.List`1[[DatingApp.API.Models.User, DatingApp.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] -> System.Collections.Generic.IEnumerable`1[[DatingApp.API.Dtos.UserForListDto, DatingApp.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] ---> AutoMapper.AutoMapperMappingException: Error mapping types.
+
+Mapping types:
+User -> UserForListDto
+DatingApp.API.Models.User -> DatingApp.API.Dtos.UserForListDto
+
+Type Map configuration:
+User -> UserForListDto
+DatingApp.API.Models.User -> DatingApp.API.Dtos.UserForListDto
+
+Property:
+Age ---> System.InvalidOperationException: Nullable object must have a value.
+   at System.Nullable`1.get_Value()
+   at DatingApp.API.Helpers.AutoMapperProfiles.<>c.<.ctor>b__0_10(User d) in C:\Mlfusion\Apps\DatingApp.Solution\DatingApp.API\Helpers\AutoMapperProfiles.cs:line 18
+   at lambda_method(Closure , List`1 , IEnumerable`1 , ResolutionContext )
+   --- End of inner exception stack trace ---
+   at lambda_method(Closure , List`1 , IEnumerable`1 , ResolutionContext )
+   --- End of inner exception stack trace ---
+   at lambda_method(Closure , List`1 , IEnumerable`1 , ResolutionContext )
+   at lambda_method(Closure , Object , Object , ResolutionContext )
+   at AutoMapper.Mapper.AutoMapper.IMapper.Map[TDestination](Object source) in C:\projects\automapper\src\AutoMapper\Mapper.cs:line 207
+   at DatingApp.API.Controllers.UsersController.GetUsers() in C:\Mlfusion\Apps\DatingApp.Solution\DatingApp.API\Controllers\UsersController.cs:line 37
+   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeNextActionFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeInnerFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeNextResourceFilter()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeFilterPipelineAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeAsync()
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.InvokeCore(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2019-02-18T10:34:46.4722902-05:00 0HLKLMQ25UIBI:00000002 [INF] End - Trace Format =  , , 0 (3b039c3b)
+2019-02-18T10:34:58.2122989-05:00 0HLKLMQ25UIBI:00000004 [INF] Enter - Information Format =  DatingRepository, GetUsers, 30 (82fb697b)
+2019-02-18T10:35:00.0686479-05:00 0HLKLMQ25UIBI:00000004 [INF] DatingRepository.GetUsers - Retrieving all users. (85d70779)
+2019-02-18T10:35:43.0956426-05:00 0HLKLMQ25UIBI:00000004 [INF] DatingRepository.GetUsers - 30 was found. (3a01d504)
+2019-02-18T10:35:43.1194488-05:00 0HLKLMQ25UIBI:00000004 [INF] End - Information Format =  DatingRepository, GetUsers, 30 (fe112800)
+2019-02-18T10:36:11.2887414-05:00 0HLKLMQ25UIBI:00000006 [INF] End - Trace Format =  , , 0 (3b039c3b)
+2019-02-18T11:13:53.3293082-05:00 0HLKLNG3P23J2:00000002 [INF] End - Trace Format =  , , 0 (3b039c3b)
+2019-02-18T11:14:18.1084400-05:00 0HLKLNG3P23J2:00000004 [INF] Enter - Information Format =  DatingRepository, GetUsers, 30 (82fb697b)
+2019-02-18T11:14:25.0160142-05:00 0HLKLNG3P23J2:00000004 [INF] DatingRepository.GetUsers - Retrieving all users. (85d70779)
+2019-02-18T11:16:29.1636240-05:00 0HLKLNHGIFES8:00000002 [INF] End - Trace Format =  , , 0 (3b039c3b)
+2019-02-18T11:16:51.3488964-05:00 0HLKLNHGIFES8:00000004 [INF] End - Trace Format =  , , 0 (3b039c3b)
+2019-02-18T11:16:59.6299368-05:00 0HLKLNHGIFES8:00000006 [INF] Enter - Information Format =  DatingRepository, GetUsers, 30 (82fb697b)
+2019-02-18T11:17:00.9136734-05:00 0HLKLNHGIFES8:00000006 [INF] DatingRepository.GetUsers - Retrieving all users. (85d70779)
+2019-02-18T11:17:29.5269310-05:00 0HLKLNHGIFES8:00000006 [INF] DatingRepository.GetUsers - 30 was found. (3a01d504)
+2019-02-18T11:17:29.5481237-05:00 0HLKLNHGIFES8:00000006 [INF] End - Information Format =  DatingRepository, GetUsers, 30 (fe112800)
+2019-02-18T12:29:49.6833350-05:00 0HLKLOQNBQT42:00000002 [INF] End - Trace Format =  , , 0 (3b039c3b)
+2019-02-18T12:29:49.8202146-05:00 0HLKLOQNBQT42:00000004 [INF] Enter - Information Format =  UsersController, GetUsers, 34 (3131d1be)
+2019-02-18T12:29:49.8212929-05:00 0HLKLOQNBQT42:00000004 [INF] UsersController.GetUsers - Retrieving all active users. (2dac2035)
+2019-02-18T12:29:49.8235270-05:00 0HLKLOQNBQT42:00000004 [INF] Enter - Information Format =  DatingRepository, GetUsers, 33 (b600cf91)
+2019-02-18T12:29:49.8236124-05:00 0HLKLOQNBQT42:00000004 [INF] DatingRepository.GetUsers - Retrieving all users. (85d70779)
+2019-02-18T12:29:49.9702268-05:00 0HLKLOQNBQT42:00000004 [INF] DatingRepository.GetUsers - 30 users was found. (f7513a2b)
+2019-02-18T12:29:49.9704556-05:00 0HLKLOQNBQT42:00000004 [INF] UsersController.GetUsers - 30 user was return. (bf254974)
+2019-02-18T12:29:50.0110146-05:00 0HLKLOQNBQT42:00000004 [INF] End - Information Format =  DatingRepository, GetUsers, 33 (ec9a0512)
+2019-02-18T12:29:55.1570525-05:00 0HLKLOQNBQT42:00000006 [INF] Enter - Information Format =  UsersController, GetUser, 54 (b96a5637)
+2019-02-18T12:29:55.1571399-05:00 0HLKLOQNBQT42:00000006 [INF] UsersController.GetUser - Retrieving user id 59 (4605e12e)
+2019-02-18T12:29:55.1585631-05:00 0HLKLOQNBQT42:00000006 [INF] Enter - Information Format =  DatingRepository, GetUser, 23 (113bd50e)
+2019-02-18T12:29:55.1586473-05:00 0HLKLOQNBQT42:00000006 [INF] DatingRepository.GetUser - Retrieving user id 59. (45d48501)
+2019-02-18T12:29:55.1939204-05:00 0HLKLOQNBQT42:00000006 [INF] UsersController.GetUser - mai was returned. (457bee5e)
+2019-02-18T12:29:55.2342883-05:00 0HLKLOQNBQT42:00000006 [INF] End - Information Format =  DatingRepository, GetUser, 23 (08577eb8)
+2019-02-18T12:30:15.4856172-05:00 0HLKLOQNBQT42:00000008 [INF] Enter - Information Format =  UsersController, UpdateUser, 77 (7dcef743)
+2019-02-18T12:30:15.4857544-05:00 0HLKLOQNBQT42:00000008 [INF] UsersController.UpdateUser - Update user id 59. (de9f9f41)
+2019-02-18T12:30:15.6240230-05:00 0HLKLOQNBQT42:00000008 [INF] Enter - Information Format =  DatingRepository, GetUser, 23 (113bd50e)
+2019-02-18T12:30:15.6241052-05:00 0HLKLOQNBQT42:00000008 [INF] DatingRepository.GetUser - Retrieving user id 59. (45d48501)
+2019-02-18T12:30:15.9829132-05:00 0HLKLOQNBQT42:00000008 [INF] UsersController.UpdateUser - Update user mai successfully. (a7c3b11c)
+2019-02-18T12:30:15.9841904-05:00 0HLKLOQNBQT42:00000008 [INF] End - Information Format =  DatingRepository, GetUser, 23 (08577eb8)
+2019-02-18T12:31:09.7415965-05:00 0HLKLOQNBQT42:0000000A [INF] Enter - Information Format =  PhotoController, AddPhoto, 38 (c5126278)
+2019-02-18T12:31:09.7469443-05:00 0HLKLOQNBQT42:0000000A [INF] Enter - Information Format =  PhotoBus, AddPhoto, 50 (74daefd9)
+2019-02-18T12:31:13.6850836-05:00 0HLKLOQNBQT42:0000000A [INF] PhotoBus.AddPhoto - Photo file was successfully uploaded. PublicId is Dating/image_20190218123109 (124449b8)
+2019-02-18T12:31:13.6853752-05:00 0HLKLOQNBQT42:0000000A [INF] PhotoBus.AddPhoto - Photo Url http://res.cloudinary.com/dihim6mku/image/upload/v1550511072/Dating/image_20190218123109.jpg (fb187872)
+2019-02-18T12:31:14.0497521-05:00 0HLKLOQNBQT42:0000000A [INF] End - Information Format =  PhotoBus, AddPhoto, 50 (2d7e14b2)
+2019-02-18T12:31:19.8426541-05:00 0HLKLOQNBQT42:0000000C [INF] Enter - Information Format =  UsersController, GetUser, 54 (b96a5637)
+2019-02-18T12:31:19.8428565-05:00 0HLKLOQNBQT42:0000000C [INF] UsersController.GetUser - Retrieving user id 59 (4605e12e)
+2019-02-18T12:31:19.8429372-05:00 0HLKLOQNBQT42:0000000C [INF] Enter - Information Format =  DatingRepository, GetUser, 23 (113bd50e)
+2019-02-18T12:31:19.8429665-05:00 0HLKLOQNBQT42:0000000C [INF] DatingRepository.GetUser - Retrieving user id 59. (45d48501)
+2019-02-18T12:31:19.8704527-05:00 0HLKLOQNBQT42:0000000C [INF] UsersController.GetUser - mai was returned. (457bee5e)
+2019-02-18T12:31:19.8787543-05:00 0HLKLOQNBQT42:0000000C [INF] End - Information Format =  DatingRepository, GetUser, 23 (08577eb8)

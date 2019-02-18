@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using DatingApp.API.Base;
 using DatingApp.API.Business;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
@@ -28,6 +30,10 @@ namespace DatingApp.API
     {
         public Startup(IConfiguration configuration)
         {
+            //var configBuilder = new ConfigurationBuilder()
+            //.SetBasePath(Directory.GetCurrentDirectory())
+            //.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
             Configuration = configuration;
         }
 
@@ -38,13 +44,17 @@ namespace DatingApp.API
         {
             // Added SqlServer Connection
             services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
+
             // Mvc, also added Json Serialize
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(opt => {
-                    opt.SerializerSettings.ReferenceLoopHandling = 
+                .AddJsonOptions(opt =>
+                {
+                    opt.SerializerSettings.ReferenceLoopHandling =
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 });
+
+            // Added Repository Service
+            services.AddScoped<ILog, Log>();
 
             // Added IAuthRepository Service
             services.AddScoped<IAuthRepository, AuthRepository>();
@@ -67,12 +77,20 @@ namespace DatingApp.API
             // Add AutoMapper
             services.AddAutoMapper();
 
+            // services.AddCors(options =>
+            //     {
+            //         options.AddPolicy("AllowSpecificOrigin",
+            //             builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader()
+            //             .AllowAnyMethod());
+            //     });
+
             // Get ClouldinarySettings from appsettings.json
             services.Configure<CloudinarySettings>(Configuration.GetSection("ClouldinarySettings"));
 
             // Jwt Authentication
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options => {
+                .AddJwtBearer(options =>
+                {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
@@ -93,12 +111,14 @@ namespace DatingApp.API
             else
             {
                 // Handle internal server errors
-                app.UseExceptionHandler(builder => {
-                    builder.Run(async context => {
+                app.UseExceptionHandler(builder =>
+                {
+                    builder.Run(async context =>
+                    {
                         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                         var error = context.Features.Get<IExceptionHandlerFeature>();
-                        if (error != null) 
+                        if (error != null)
                         {
                             context.Response.AddApplicationError(error.Error.Message);
                             await context.Response.WriteAsync(error.Error.Message);
@@ -108,15 +128,20 @@ namespace DatingApp.API
                 // app.UseHsts();
             }
 
-            
+
+
+
             //app.UseHttpsRedirection();
             //seeder.SeedUsers();
 
             // app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 
-            app.UseCors(x => x.WithOrigins("http://localhost:4200")
-                .AllowAnyHeader().AllowAnyMethod().AllowCredentials());
-                
+
+            app.UseCors(x => x.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
+
+            //.UseCors("AllowSpecificOrigin");
+
             app.UseAuthentication();
             app.UseMvc();
         }

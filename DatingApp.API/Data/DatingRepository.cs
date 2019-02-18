@@ -1,46 +1,44 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DatingApp.API.Base;
+using DatingApp.API.Infrastructure;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Data
 {
-    public class DatingRepository : IDatingRepository
+    public class DatingRepository : Repository<User>,  IDatingRepository
     {
-        private readonly DataContext _context;
+        private readonly ILog _log;
 
-        public DatingRepository(DataContext context)
-    {
-            _context = context;
-        }
-        public void Add<T>(T entity) where T : class
+        public DatingRepository(ILog log, DataContext context) :  base(log, context)
         {
-            _context.Add(entity);
-        }
-
-        public void Delete<T>(T entity) where T : class
-        {
-        _context.Remove(entity);
+            _log = log;
         }
 
         public async Task<User> GetUser(int id)
         {
-            var user = await _context.Users.Include(p => p.Photos)
-                .FirstOrDefaultAsync(u => u.Id == id);
-
-            return user;
+           // var user = await _context.Users.Include(p => p.Photos)
+           //     .FirstOrDefaultAsync(u => u.Id == id);
+            using(_log.BeginScope())
+            {
+                _log.Write($"Retrieving user id {id}.");
+                var user = await SelectAsync(id);
+                return user;
+            }
         }
 
         public async Task<IEnumerable<User>> GetUsers()
         {
-            var users = await _context.Users.Include(p => p.Photos).ToListAsync(); 
-            
-            return users;
-        }
-
-        public async Task<bool> SaveAll()
-        {
-           return await _context.SaveChangesAsync() > 0;
+            using(_log.BeginScope())
+            {
+                // var users = await _context.Users.Include(p => p.Photos).ToListAsync(); 
+                _log.Write("Retrieving all users.");
+                var users = await SelectIncludeAsync(null, 0, "Photos");
+                _log.Write($"{await CountAsync(users)} users was found.");
+                    
+                return users;
+            }
         }
     }
 }

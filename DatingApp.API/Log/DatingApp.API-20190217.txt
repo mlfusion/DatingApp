@@ -1,0 +1,24 @@
+2019-02-17T00:26:47.7099429-05:00 0HLKKJ1R7F5EE:00000002 [ERR] An unhandled exception has occurred while executing the request. (48a46595)
+System.InvalidCastException: Unable to cast object of type 'System.String' to type 'System.Linq.Expressions.Expression`1[System.Func`2[DatingApp.API.Models.User,System.Object]]'.
+   at DatingApp.API.Infrastructure.Repository`1.SelectIncludeAsync(Expression`1 filter, Object[] includes) in C:\Mlfusion\Apps\DatingApp.Solution\DatingApp.API\Infrastructure\Repository.cs:line 41
+   at DatingApp.API.Data.AuthRepository.Login(String username, String password) in C:\Mlfusion\Apps\DatingApp.Solution\DatingApp.API\Data\AuthRepository.cs:line 23
+   at DatingApp.API.Controllers.AuthController.Login(UserForLoginDto loginDto) in C:\Mlfusion\Apps\DatingApp.Solution\DatingApp.API\Controllers\AuthController.cs:line 70
+   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeNextActionFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeInnerFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeNextResourceFilter()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeFilterPipelineAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeAsync()
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.InvokeCore(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware.Invoke(HttpContext context)
+2019-02-17T00:26:50.1569123-05:00 0HLKKJ1R7F5EE:00000002 [INF] End - Trace Format =  , , 0 (3b039c3b)
+2019-02-17T01:04:24.9809972-05:00 0HLKKJMK15A4O:00000002 [INF] End - Trace Format =  , , 0 (3b039c3b)

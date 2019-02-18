@@ -48,7 +48,6 @@
           <div class="invalid-feedback" *ngIf="registerForm.get('country').touched && registerForm.get('country').hasError('required')">Country is required</div>
         </div>
       
-  
     <div class="form-group">
       <input type="password" class="form-control mr-sm-2" 
       [ngClass]="{'is-invalid': registerForm.get('password').errors &&

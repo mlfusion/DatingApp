@@ -44,18 +44,18 @@ registerForm: FormGroup;
   }
 
   register() {
-    console.log(this.registerForm.value);
-    // this.authService.register(this.model).subscribe(res => {
-    //   console.log(res);
-    //   this.cancelRegister.emit(false);
+   // console.log(this.registerForm.value);
+    this.authService.register(this.registerForm.value).subscribe(res => {
+      console.log(res);
+      this.cancelRegister.emit(false);
 
-    //   this.notificationService.success('Your registeration was successful');
-    // }, error => {
+      this.notificationService.success('Your registeration was successful');
+    }, error => {
 
-    //   this.notificationService.error(error);
+      this.notificationService.error(error);
 
-    //   console.error(error);
-    // });
+      console.error(error);
+    });
   }
 
   cancel() {

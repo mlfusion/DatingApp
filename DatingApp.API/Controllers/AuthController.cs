@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using DatingApp.API.Base;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
@@ -22,9 +23,11 @@ namespace DatingApp.API.Controllers
         private readonly IAuthRepository _repository;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
+        private readonly ILog _log;
 
-        public AuthController(IAuthRepository repository, IConfiguration config, IMapper mapper)
+        public AuthController(IAuthRepository repository, IConfiguration config, IMapper mapper, ILog log)
         {
+            _log = log;
             _config = config;
             _mapper = mapper;
             _repository = repository;
@@ -33,25 +36,30 @@ namespace DatingApp.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userDto)
         {
-            //if (!ModelState.IsValid)
-            // {
-
-            // }
-
-            // validation request
-            userDto.Username = userDto.Username.ToLower();
-
-            if (await _repository.UserExits(userDto.Username))
-                return BadRequest("Username already exists");
-
-            var userToCreate = new User
+           using(_log.BeginScope())
             {
-                Username = userDto.Username
-            };
 
-            var createdUser = await _repository.Register(userToCreate, userDto.Password);
+               //throw new Exception("Just testing exception. ");
 
-            return StatusCode(201);
+                // validation request
+                userDto.Username = userDto.Username.ToLower();
+
+                _log.Write($"UserDto object: {userDto.Username}");
+
+                if (await _repository.UserExits(userDto.Username))
+                    return BadRequest("Username already exists");
+
+                var userToCreate = new User
+                {
+                    Username = userDto.Username
+                };
+
+                var createdUser = await _repository.Register(userToCreate, userDto.Password);
+
+                _log.Write($"{userToCreate} has been created");
+
+                return StatusCode(201);
+            }
         }
 
         [HttpPost("login")]
@@ -69,6 +77,8 @@ namespace DatingApp.API.Controllers
                 new Claim(ClaimTypes.NameIdentifier, login.Id.ToString()),
                 new Claim(ClaimTypes.Name, login.Username),
                 new Claim(ClaimTypes.Role, "Admin")//,
+                //new Claim("GangName", "FLEX"),
+                //new Claim(Common.ClaimTypes.ApplicationId, "123456")
                // new Claim(ClaimTypes., login.Photos.FirstOrDefault(d => d.IsMain == true).Url )
             };
 
@@ -90,7 +100,8 @@ namespace DatingApp.API.Controllers
 
             var userDto = _mapper.Map<User, UserForListDto>(login);
 
-            return Ok(new { 
+            return Ok(new
+            {
                 token = tokenHandler.WriteToken(token),
                 user = userDto
             });

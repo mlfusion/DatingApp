@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
+using DatingApp.API.Base;
 
 namespace DatingApp.API.Business
 {
@@ -22,16 +23,17 @@ namespace DatingApp.API.Business
         private readonly IDatingRepository _datingRepository;
         private readonly IMapper _mapper;
         private readonly IOptions<CloudinarySettings> _cloudinarySettings;
+        private readonly ILog _log;
         private Cloudinary _cloudinary;
 
         public PhotoBus(IPhotoRepository photoRepository, IDatingRepository datingRepository, 
-                               IMapper mapper, IOptions<CloudinarySettings> cloudinarySettings)
+                               IMapper mapper, IOptions<CloudinarySettings> cloudinarySettings, ILog log)
         {
             _photoRepository = photoRepository;
             _datingRepository = datingRepository;
             _mapper = mapper;
             _cloudinarySettings = cloudinarySettings;
-
+            _log = log;
             _cloudinary = new Cloudinary(GetAcc());
         }
 
@@ -45,115 +47,142 @@ namespace DatingApp.API.Business
 
         public async Task<PhotoForCreationDto> AddPhoto(int userId, PhotoForCreationDto photoForCreationDto)
         {
-            var file = photoForCreationDto.File;
-
-            var uploadResult = new ImageUploadResult();
-
-            if (file.Length > 0)
+            using (_log.BeginScope())
             {
-                using (var stream = file.OpenReadStream())
+                var file = photoForCreationDto.File;
+
+                var uploadResult = new ImageUploadResult();
+
+                if (file.Length > 0)
                 {
-                    var uploadParams = new ImageUploadParams
+                    using (var stream = file.OpenReadStream())
                     {
-                        PublicId = "Dating/" + $"image_{DateTime.Now.ToString("yyyyMMddHHmmss")}",
-                        File = new FileDescription(file.Name, stream),
-                        Transformation = new Transformation()
-                            .Width(500).Height(500).Crop("fill").Gravity("face")
-                    };
+                        var uploadParams = new ImageUploadParams
+                        {
+                            PublicId = "Dating/" + $"image_{DateTime.Now.ToString("yyyyMMddHHmmss")}",
+                            File = new FileDescription(file.Name, stream),
+                            Transformation = new Transformation()
+                                .Width(500).Height(500).Crop("fill").Gravity("face")
+                        };
 
-                    uploadResult = _cloudinary.Upload(uploadParams);
+                        uploadResult = _cloudinary.Upload(uploadParams);
+
+                        _log.Write($"Photo {file.Name} was successfully uploaded. PublicId is {uploadResult.PublicId}");
+                        _log.Write($"Photo Url {uploadResult.Uri.ToString()}");
+                    }
                 }
+
+                if (uploadResult == null)
+                    return null;
+
+                photoForCreationDto.Url = uploadResult.Uri.ToString();
+                photoForCreationDto.PublicId = uploadResult.PublicId;
+                photoForCreationDto.UserId = userId;
+
+                var photo = _mapper.Map<Photo>(photoForCreationDto);
+                var photoIsMain = await _photoRepository.GetPhoto(x => x.UserId == userId && x.IsMain);
+
+                if (photoIsMain == null)
+                    photo.IsMain = true;
+                
+                _photoRepository.Add(photo);
+
+                if (await _photoRepository.SaveAll())
+                {
+                    photoForCreationDto.Id = photo.Id;
+                    return photoForCreationDto;
+                }
+
+                // Return null is Save() failed
+                return photoForCreationDto = null;
             }
-
-            if (uploadResult == null)
-                return null;
-
-            photoForCreationDto.Url = uploadResult.Uri.ToString();
-            photoForCreationDto.PublicId = uploadResult.PublicId;
-            photoForCreationDto.UserId = userId;
-
-            var photo = _mapper.Map<Photo>(photoForCreationDto);
-            var photoIsMain = await _photoRepository.GetPhoto(x => x.UserId == userId && x.IsMain);
-
-            if (photoIsMain == null)
-                photo.IsMain = true;
-            
-            _photoRepository.Add(photo);
-
-            if (await _photoRepository.SaveAll())
-            {
-                photoForCreationDto.Id = photo.Id;
-                return photoForCreationDto;
-            }
-
-            // Return null is Save() failed
-            return photoForCreationDto = null;
         }
 
  
         public async Task<Photo> GetPhoto(int id)
         {
-            var photo = await _photoRepository.GetPhoto(id);
+            using(_log.BeginScope())
+            {
+                var photo = await _photoRepository.GetPhoto(id);
 
-            return photo;
+                return photo;
+            }
         }
 
         public async Task<IEnumerable<Photo>> GetPhotos()
         {
-            var photos = await _photoRepository.GetPhotos();
+            using(_log.BeginScope())
+            {
+                var photos = await _photoRepository.GetPhotos();
 
-            return photos;
+                return photos;
+            }
         }
 
         public async Task<Photo> SetMainPhoto(int userId, int id)
         {
-            var isMainPhotoCurrent = await _photoRepository.GetPhoto(x => x.IsMain && x.UserId == userId);
-
-            if (isMainPhotoCurrent != null)
+            using(_log.BeginScope())
             {
-                isMainPhotoCurrent.IsMain = false;
-                isMainPhotoCurrent.Modified = DateTime.Now;
+                var isMainPhotoCurrent = await _photoRepository.GetPhoto(x => x.IsMain && x.UserId == userId);
+
+                if (isMainPhotoCurrent != null)
+                {
+                    isMainPhotoCurrent.IsMain = false;
+                    isMainPhotoCurrent.Modified = DateTime.Now;
+                }
+
+                var isMainPhotoUpdate = await _photoRepository.GetPhoto(x => x.Id == id);
+                isMainPhotoUpdate.IsMain = true;
+                isMainPhotoUpdate.Modified = DateTime.Now;
+
+                if (await _photoRepository.SaveAll())
+                    return isMainPhotoUpdate;
+
+                return null;
             }
-
-            var isMainPhotoUpdate = await _photoRepository.GetPhoto(x => x.Id == id);
-            isMainPhotoUpdate.IsMain = true;
-            isMainPhotoUpdate.Modified = DateTime.Now;
-
-            if (await _photoRepository.SaveAll())
-                return isMainPhotoUpdate;
-
-            return null;
         }
 
 // List<Model> modelList = _unitOfWork.ModelRepository.Get(m => m.FirstName == "Jan" || m.LastName == "Holinka", includeProperties: "Account")
         public async Task<Photo> GetMainPhoto(int userId, int id)
         {
-            var photo = await _photoRepository.GetPhoto(x => x.Id == id && x.IsMain);
-          //  var photos = await _photoRepository.GetPhoto(x => x.Id == id && x.IsMain, null, s => s.Comment, s => s.User);
+            using(_log.BeginScope())
+            {
+                var photo = await _photoRepository.GetPhoto(x => x.Id == id && x.IsMain);
+            //  var photos = await _photoRepository.GetPhoto(x => x.Id == id && x.IsMain, null, s => s.Comment, s => s.User);
 
-            return photo;
+                return photo;
+            }
         }
 
         public async Task<Photo> DeletePhoto(int userId, Photo photo)
         {
-
-            if (photo.PublicId != null)
+            using(_log.BeginScope())
             {
-                var deleteParams = new DeletionParams(photo.PublicId);
+                if (photo.PublicId != null)
+                {
+                    var deleteParams = new DeletionParams(photo.PublicId);
 
-                var result = _cloudinary.Destroy(deleteParams);
+                    var result = _cloudinary.Destroy(deleteParams);
 
-                if(result.Result != "ok")
-                    return null;
-            }
+                    if(result.Result != "ok")
+                        return null;
 
-            photo.Modified = DateTime.Now;
-            _photoRepository.Delete(photo);
+                    _log.Write($"Successfully deleted {photo.PublicId} from Cloudinary.");
+                }
 
-            if (await _photoRepository.SaveAll())
-                return photo;
+                photo.Modified = DateTime.Now;
+                _photoRepository.Delete(photo);
 
-            return null;        
+                if (await _photoRepository.SaveAll())
+                    {
+                        _log.Write($"Successfully deleted PhotoId={photo.Id} from Photos.");
+                        return photo;
+                    }
+
+                 _log.Write($"Unable to delete sample with PhotoId={photo.Id}");
+                 
+                return null;    
+            }    
         }
     }
 
