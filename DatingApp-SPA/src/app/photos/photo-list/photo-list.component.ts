@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PhotoListComponent implements OnInit {
 photos: Photo[];
+searchPhoto: any;
 
   constructor(private photoService: PhotoService, notificationService: NotificationService,
               private route: ActivatedRoute) { }
@@ -18,6 +19,8 @@ photos: Photo[];
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.photos = data.photos;
+
+     // console.log(this.photos);
   });
 
 }

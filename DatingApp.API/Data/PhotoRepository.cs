@@ -3,34 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DatingApp.API.Base;
+using DatingApp.API.Common.Paging;
+using DatingApp.API.Infrastructure;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DatingApp.API.Data
+namespace DatingApp.API.Data 
 {
-    public class PhotoRepository : IPhotoRepository
+    public class PhotoRepository : Repository<Photo>, IPhotoRepository
     {
+        private readonly ILog _log;
         private readonly DataContext _context;
 
-        public PhotoRepository(DataContext context)
+        public PhotoRepository(ILog log, DataContext context) : base(log, context)
     {
+            _log = log;
             _context = context;
         }
-        public void Add<T>(T entity) where T : class
+        public new void Add (Photo entity)
         {
-            _context.Add(entity);
+            base.Add(entity);
         }
 
-        public void Delete<T>(T entity) where T : class
+        public new void Delete(Photo entity)
         {
-        _context.Remove(entity);
+           base.Delete(entity);
         }
 
         public async Task<Photo> GetPhoto(int id)
         {
-            var obj = await _context.Photos.Include(u => u.User)
-                    .FirstOrDefaultAsync(x => x.Id == id);
-
+            var obj = await base.SelectIncludeAsync(x => x.Id == id, "User");
+            // _context.Photos.Include(u => u.User)
+            //        .FirstOrDefaultAsync();
             return obj;
         }
 
@@ -85,6 +90,16 @@ namespace DatingApp.API.Data
         public async Task<bool> SaveAll()
         {
            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public Task<PagedList<Photo>> SelectAsync(Expression<Func<Photo, bool>> filter, Params param)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Photo>> SelectIncludeAsync(Expression<Func<Photo, bool>> filter, Params param, int i = 0)
+        {
+            throw new NotImplementedException();
         }
     }
 }

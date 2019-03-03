@@ -34,6 +34,7 @@ unloadNotification($event: any) {
       // Usering resolver to get user
       this.route.data.subscribe(data => {
         this.user = data['user'];
+        console.log(this.user);
       });
 
       this.warning = ' You have made changes.  Any unsaved changes will be lost!';

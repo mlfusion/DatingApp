@@ -1,0 +1,42 @@
+<div bsModal #childModal="bs-modal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-child-name" class="modal-title pull-left">{{title}} Role</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="hideChildModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div *ngIf="role" class="modal-body">
+          
+          <div  class="form-group row">
+            <div class="col-md-6">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" [(ngModel)]="role.name" />
+            </div>
+          </div>
+
+          <div  class="form-group row">
+              <div class="col-md-6">
+                  <label for="active">Active</label>
+                  <div class="clearfix"></div>
+                  <select name="active" class="form-control" id="active" [(ngModel)]="role.active">
+                      <option value="true">Yes</option>
+                      <option value="false">No</option>
+                    </select>
+              </div>
+
+            </div>
+
+          <div class="form-group row">
+            <div class="col-4">
+                <button class="btn btn-primary" *ngIf="dumb" [disabled]="canUpdate" (click)="addRole(role)">Add</button>
+                <button class="btn btn-primary" *ngIf="!dumb" [disabled]="canUpdate" (click)="updateRole(role)">Update</button>
+                <button class="btn btn-danger" (click)="hideChildModal()">Cancel</button>
+            </div> 
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,4 +1,5 @@
 export interface Photo {
+  push(photo: { id: number; url: string; created: string; description: string; isMain: boolean; }): any;
   id: number;
   url: string;
   description: string;

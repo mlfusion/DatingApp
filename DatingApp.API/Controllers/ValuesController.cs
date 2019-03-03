@@ -26,6 +26,8 @@ namespace DatingApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetValues()
         {
+            throw new Exception("Exception while fetching all the students from the storage.");
+            
             var values = await _context.Values.ToListAsync();
 
             return Ok(values);

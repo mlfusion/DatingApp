@@ -4,8 +4,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Base;
+using DatingApp.API.Common.ActionFilters;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +15,7 @@ namespace DatingApp.API.Controllers
 {
     
     [Authorize]
+    [ServiceFilter(typeof(UserFilterAttribute))] // Action Filter is in place
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -28,7 +31,7 @@ namespace DatingApp.API.Controllers
             _log = log;
         }
 
-        [HttpGet]
+        [HttpGet] 
         public async Task<IActionResult> GetUsers()
         {
             using(_log.BeginScope())
@@ -39,7 +42,7 @@ namespace DatingApp.API.Controllers
                 if (users == null)
                     return NotFound();
 
-                 _log.Write($"{await _repo.CountAsync(users)} user was return.");
+                 _log.Write($"{_repo.Count()} user was return.");
 
                 // Convert with AutoMapper User => UserForListDto
                 var usersToMap = _mapper.Map<IEnumerable<UserForListDto>>(users);
@@ -48,11 +51,11 @@ namespace DatingApp.API.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name= "GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
             using(_log.BeginScope())
-            {
+            {  
                 _log.Write($"Retrieving user id {id}");
                 var user = await _repo.GetUser(id);
 
@@ -76,9 +79,9 @@ namespace DatingApp.API.Controllers
         {
             using(_log.BeginScope())
             {
-                _log.Write($"Update user id {id}.");
-
-                if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                _log.Write($"Update user id {id}.");//
+ 
+                if (RoleType.Admin.ToString() != User.FindFirst(System.Security.Claims.ClaimTypes.Role).Value)
                     return Unauthorized();
 
                 var userFromRepo = await _repo.GetUser(id);

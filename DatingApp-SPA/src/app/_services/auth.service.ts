@@ -34,16 +34,17 @@ login(model: any) {
           localStorage.setItem('user', JSON.stringify(user.user));
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
           console.log(this.decodedToken);
-          console.log(localStorage.getItem('user'));
+          // console.log(localStorage.getItem('user'));
           this.currentusr = user.user;
+          // set default photo
           this.changeMemberPhoto(this.currentusr.photoUrl);
         }
       })
     );
 }
 
-register(model: any) {
-  return this.http.post(this.baseUrl + 'register', model);
+register(user: User) {
+  return this.http.post(this.baseUrl + 'register', user);
 }
 
 loggedIn() {

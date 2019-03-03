@@ -8,12 +8,13 @@ export interface User {
     gender: string;
     created: Date;
     modified: Date;
-    lastActive: Date;
+    lastAcitve: Date;
     photoUrl: string;
     city: string;
     country: string;
     interests?: string;
     introduction?: string;
     lookingFor?: string;
+    roleId?: number;
     photos?: Photo[];
 }

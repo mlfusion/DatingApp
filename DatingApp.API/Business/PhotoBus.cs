@@ -17,33 +17,38 @@ using DatingApp.API.Base;
 
 namespace DatingApp.API.Business
 {
-    public class PhotoBus : IPhotoBus
+    public class PhotoBus : CloudinaryBus, IPhotoBus
     {
-        private readonly IPhotoRepository _photoRepository;
-        private readonly IDatingRepository _datingRepository;
+        private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
-        private readonly IOptions<CloudinarySettings> _cloudinarySettings;
+       // private readonly IOptions<CloudinarySettings> _cloudinarySettings;
         private readonly ILog _log;
-        private Cloudinary _cloudinary;
 
-        public PhotoBus(IPhotoRepository photoRepository, IDatingRepository datingRepository, 
-                               IMapper mapper, IOptions<CloudinarySettings> cloudinarySettings, ILog log)
+        public override string SelectedPhoto { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        // private Cloudinary _cloudinary;
+
+        //    public PhotoBus(IOptions<CloudinarySettings> cloudinarySettings)
+        //    {
+        //          _cloudinarySettings = cloudinarySettings;
+        //    }
+
+        public PhotoBus( IRepositoryWrapper repository,
+            IOptions<CloudinarySettings> cloudinarySettings, IMapper mapper, ILog log) : base(cloudinarySettings)
         {
-            _photoRepository = photoRepository;
-            _datingRepository = datingRepository;
+            _repository = repository;
             _mapper = mapper;
-            _cloudinarySettings = cloudinarySettings;
+           // _cloudinarySettings = cloudinarySettings;
             _log = log;
-            _cloudinary = new Cloudinary(GetAcc());
+           // _cloudinary = new Cloudinary(GetAcc());
         }
 
-        
-        private CloudinaryDotNet.Account GetAcc()
-         => new CloudinaryDotNet.Account(
-                _cloudinarySettings.Value.ApiName,
-                _cloudinarySettings.Value.ApiKey,
-                _cloudinarySettings.Value.ApiSerect
-        );
+        // private CloudinaryDotNet.Account GetAcc()
+        //  => new CloudinaryDotNet.Account(
+        //         _cloudinarySettings.Value.ApiName,
+        //         _cloudinarySettings.Value.ApiKey,
+        //         _cloudinarySettings.Value.ApiSerect
+        // );
 
         public async Task<PhotoForCreationDto> AddPhoto(int userId, PhotoForCreationDto photoForCreationDto)
         {
@@ -80,14 +85,19 @@ namespace DatingApp.API.Business
                 photoForCreationDto.UserId = userId;
 
                 var photo = _mapper.Map<Photo>(photoForCreationDto);
-                var photoIsMain = await _photoRepository.GetPhoto(x => x.UserId == userId && x.IsMain);
+                var photoIsMain = await _repository.Photo.GetPhoto(x => x.UserId == userId && x.IsMain);
 
                 if (photoIsMain == null)
-                    photo.IsMain = true;
+                {
+                    photoForCreationDto.IsMain = true;
+                    _log.Write($"Photo UserId={photo.UserId} isMain photo.");
+                }
+                else
+                    _log.Write($"Photo {photoIsMain.Id} is not main photo.");
                 
-                _photoRepository.Add(photo);
+                _repository.Photo.Add(photo);
 
-                if (await _photoRepository.SaveAll())
+                if (await _repository.Photo.SaveAll())
                 {
                     photoForCreationDto.Id = photo.Id;
                     return photoForCreationDto;
@@ -98,12 +108,11 @@ namespace DatingApp.API.Business
             }
         }
 
- 
         public async Task<Photo> GetPhoto(int id)
         {
             using(_log.BeginScope())
             {
-                var photo = await _photoRepository.GetPhoto(id);
+                var photo = await _repository.Photo.GetPhoto(id);
 
                 return photo;
             }
@@ -113,7 +122,7 @@ namespace DatingApp.API.Business
         {
             using(_log.BeginScope())
             {
-                var photos = await _photoRepository.GetPhotos();
+                var photos = await _repository.Photo.SelectIncludeAsync(null, 0, "User");
 
                 return photos;
             }
@@ -123,7 +132,7 @@ namespace DatingApp.API.Business
         {
             using(_log.BeginScope())
             {
-                var isMainPhotoCurrent = await _photoRepository.GetPhoto(x => x.IsMain && x.UserId == userId);
+                var isMainPhotoCurrent = await _repository.Photo.GetPhoto(x => x.IsMain && x.UserId == userId);
 
                 if (isMainPhotoCurrent != null)
                 {
@@ -131,11 +140,11 @@ namespace DatingApp.API.Business
                     isMainPhotoCurrent.Modified = DateTime.Now;
                 }
 
-                var isMainPhotoUpdate = await _photoRepository.GetPhoto(x => x.Id == id);
+                var isMainPhotoUpdate = await _repository.Photo.GetPhoto(x => x.Id == id);
                 isMainPhotoUpdate.IsMain = true;
                 isMainPhotoUpdate.Modified = DateTime.Now;
 
-                if (await _photoRepository.SaveAll())
+                if (await _repository.Photo.SaveAll())
                     return isMainPhotoUpdate;
 
                 return null;
@@ -147,7 +156,7 @@ namespace DatingApp.API.Business
         {
             using(_log.BeginScope())
             {
-                var photo = await _photoRepository.GetPhoto(x => x.Id == id && x.IsMain);
+                var photo = await _repository.Photo.GetPhoto(x => x.Id == id && x.IsMain);
             //  var photos = await _photoRepository.GetPhoto(x => x.Id == id && x.IsMain, null, s => s.Comment, s => s.User);
 
                 return photo;
@@ -156,7 +165,7 @@ namespace DatingApp.API.Business
 
         public async Task<Photo> DeletePhoto(int userId, Photo photo)
         {
-            using(_log.BeginScope())
+            using(_log.BeginScope()) 
             {
                 if (photo.PublicId != null)
                 {
@@ -171,15 +180,15 @@ namespace DatingApp.API.Business
                 }
 
                 photo.Modified = DateTime.Now;
-                _photoRepository.Delete(photo);
+                _repository.Photo.Delete(photo);
 
-                if (await _photoRepository.SaveAll())
+                if (await _repository.Photo.SaveAll())
                     {
-                        _log.Write($"Successfully deleted PhotoId={photo.Id} from Photos.");
+                       // _log.Write($"Successfully deleted PhotoId={photo.Id} from Photos.");
                         return photo;
                     }
 
-                 _log.Write($"Unable to delete sample with PhotoId={photo.Id}");
+                // _log.Write($"Unable to delete sample with PhotoId={photo.Id}");
                  
                 return null;    
             }    

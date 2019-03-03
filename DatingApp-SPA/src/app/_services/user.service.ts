@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../_models/user';
+import { ApiResult } from '../_models/api-result';
 
 // const httpOptions = {
 //   headers: new HttpHeaders({

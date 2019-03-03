@@ -18,7 +18,7 @@ canActivate(): boolean {
     return true;
   }
 
-  this.notificationService.warning('You can\'t access this link');
+  this.notificationService.warning('You can\'t access this link. Ok');
   this.router.navigate(['/home']);
   return false;
 }

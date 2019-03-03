@@ -5,10 +5,10 @@ namespace DatingApp.API.Models
 {
     public class User
     {
-        public User()
-        {
-            Created = DateTime.Now;
-        }
+        // public User()
+        // {
+        //     Created = DateTime.Now;
+        // }
         
         public int Id { get; set; } 
         public string Username { get; set; }
@@ -25,6 +25,7 @@ namespace DatingApp.API.Models
         public string Interests { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
+        public int RoleId { get; set; }
         public ICollection<Photo> Photos { get; set; }
     }
 }

@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Base;
 using DatingApp.API.Business;
+using DatingApp.API.Common;
+using DatingApp.API.Common.ActionFilters;
+using DatingApp.API.Common.Extensions;
+using DatingApp.API.Common.Paging;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -56,17 +60,21 @@ namespace DatingApp.API
             // Added Repository Service
             services.AddScoped<ILog, Log>();
 
-            // Added IAuthRepository Service
-            services.AddScoped<IAuthRepository, AuthRepository>();
+            // // Added IAuthRepository Service
+            // services.AddScoped<IAuthRepository, AuthRepository>();
 
-            // Added IDatingRepository Service
-            services.AddScoped<IDatingRepository, DatingRepository>();
+            // // Added IDatingRepository Service
+            // services.AddScoped<IDatingRepository, DatingRepository>();
 
-            // Added IPhotoRepository Service
-            services.AddScoped<IPhotoRepository, PhotoRepository>();
+            // // Added IPhotoRepository Service
+            // services.AddScoped<IPhotoRepository, PhotoRepository>();
+
+            // Added Repository Wrapper
+            services.ConfigureRepositoryWrapper();
 
             // Added IPhotoBus
             services.AddScoped<IPhotoBus, PhotoBus>();
+            services.AddScoped<IRoleBus, RoleBus>();
 
             // Add Cors
             services.AddCors();
@@ -86,6 +94,7 @@ namespace DatingApp.API
 
             // Get ClouldinarySettings from appsettings.json
             services.Configure<CloudinarySettings>(Configuration.GetSection("ClouldinarySettings"));
+            // services.Configure<Params>(Configuration.GetSection("Paging"));
 
             // Jwt Authentication
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -99,6 +108,10 @@ namespace DatingApp.API
                         ValidateAudience = false
                     };
                 });
+
+            // Added ActionFilters Section
+            services.AddScoped<UserFilterAttribute>();
+            services.AddScoped<ValidationFilterAttribute>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,26 +123,11 @@ namespace DatingApp.API
             }
             else
             {
-                // Handle internal server errors
-                app.UseExceptionHandler(builder =>
-                {
-                    builder.Run(async context =>
-                    {
-                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                // handler error from common/exceptionmiddleware
+                app.ConfigureExceptionHandler();
 
-                        var error = context.Features.Get<IExceptionHandlerFeature>();
-                        if (error != null)
-                        {
-                            context.Response.AddApplicationError(error.Error.Message);
-                            await context.Response.WriteAsync(error.Error.Message);
-                        }
-                    });
-                });
                 // app.UseHsts();
             }
-
-
-
 
             //app.UseHttpsRedirection();
             //seeder.SeedUsers();
@@ -137,12 +135,12 @@ namespace DatingApp.API
             // app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 
-
             app.UseCors(x => x.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
 
             //.UseCors("AllowSpecificOrigin");
 
             app.UseAuthentication();
+
             app.UseMvc();
         }
     }

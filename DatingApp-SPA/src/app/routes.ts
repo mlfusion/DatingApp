@@ -1,3 +1,7 @@
+import { RoleListResolver } from './_resolver/role-list-resolvers';
+import { SettingsUsersResolver } from './_resolver/settings-users-resolvers';
+import { SettingsUsersComponent } from './settings/settings-users/settings-users.component';
+import { SettingsComponent } from './settings/settings/settings.component';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { MemberEditResolver } from './_resolver/member-edit-resolvers';
 import { MemberListResolver } from './_resolver/member-list-resolvers';
@@ -12,6 +16,8 @@ import { AuthGuard } from './_guards/auth.guard';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { PhotoListComponent } from './photos/photo-list/photo-list.component';
 import { PhotoListResolver } from './_resolver/photo-list-resolvers';
+import { RoleListComponent } from './roles/role-list/role-list.component';
+import { AdminGuard } from './_guards/admin.guard';
 
 export const appRoutes: Routes = [
     { path: '', component: HomeComponent},
@@ -28,7 +34,13 @@ export const appRoutes: Routes = [
                 resolve: {user: MemberEditResolver}, canDeactivate: [PreventUnsavedChanges]},
             { path: 'messages', component: MessagesComponent},
             { path: 'lists', component: ListsComponent},
-            { path: 'photos', component: PhotoListComponent, resolve: {photos: PhotoListResolver}}
+            { path: 'settings', canActivate: [AdminGuard], component: SettingsComponent,
+                children: [
+                    { path: 'photos', component: PhotoListComponent, resolve: {photos: PhotoListResolver}},
+                    { path: 'users', component: SettingsUsersComponent, resolve: {users: SettingsUsersResolver}},
+                    { path: 'roles', component: RoleListComponent, resolve: {roles: RoleListResolver}},
+                ]
+        }
         ]
     },
 

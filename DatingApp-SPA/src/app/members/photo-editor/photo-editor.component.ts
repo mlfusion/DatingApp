@@ -20,12 +20,14 @@ export class PhotoEditorComponent implements OnInit {
   uploader: FileUploader; // = new FileUploader({url: url});
   hasBaseDropZoneOver = false;
   currentMain: Photo;
+  uploadedPhoto: Photo;
 
   constructor(private authService: AuthService, private photoService: PhotoService,
               private noticationService: NotificationService) { }
 
   ngOnInit() {
     this.initializeUploader();
+    // console.log(this.photos);
   }
 
   public fileOverBase(e: any): void {
@@ -55,11 +57,26 @@ export class PhotoEditorComponent implements OnInit {
           description: res.description,
           isMain: res.isMain
         };
-        // this.photos.push(photo);
+
+        // testing purpose
+        // console.log(photo);
+
+        if (photo.isMain) {
+          // update photo with BehaviorSubject
+          this.authService.changeMemberPhoto(photo.url);
+
+          // update user stored in authSevice
+          this.authService.currentusr.photoUrl = photo.url;
+          localStorage.setItem('user', JSON.stringify(this.authService.currentusr));
+        }
+
+        this.photos.push(photo);
+
       }
     };
 
     this.uploader.onErrorItem = ((item: FileItem, response: string, status: number, headers: ParsedResponseHeaders): any => {
+      this.noticationService.error(response);
       console.error(response);
       });
 

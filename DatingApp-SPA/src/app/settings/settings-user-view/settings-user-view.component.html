@@ -1,0 +1,102 @@
+
+
+
+<!-- <div bsModal #childModal="bs-modal">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Modal</h4>
+    <button type="button" class="close pull-right" aria-label="Close" >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <div>
+          {{user?.knownAs}}
+        </div>
+  </div>
+</div> -->
+
+<div bsModal #childModal="bs-modal" class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-child-name" class="modal-title pull-left">User Info</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideChildModal(user?.knownAs)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div *ngIf="user" class="modal-body">
+        <div  class="form-group row">
+          
+          <div class="col-md-6">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="username" name="username" [(ngModel)]="user.username" />
+          </div>
+          <div class="col-md-6">
+              <label for="role">Role</label>
+              <select name="role" class="form-control" id="role" [(ngModel)]="user.roleId">
+                  <option value="0">-- select role --</option>
+                  <option *ngFor="let role of roles" value="{{role.id}}">{{role.name}}</option>
+                </select>
+          </div>  
+
+        </div>
+          <div class="form-group row">
+  
+          <div class="col-md-4">
+              <label for="gender">Gender</label>
+              <select name="gender" class="form-control" id="gender" [(ngModel)]="user.gender">
+                <option value="female">female</option>
+                <option value="male">male</option>
+              </select>
+          </div>
+          <div class="col-md-4">
+              <label for="date">Date of Birth</label>
+              <input type="text" class="form-control" id="knownAs" name="knownAs" [(ngModel)]="user.knownAs" />
+          </div> 
+          <div class="col-md-4">
+              <label for="knownAs">Known As</label>
+              <input type="text" class="form-control" id="knownAs" name="knownAs" [(ngModel)]="user.knownAs" />
+          </div> 
+
+        </div>
+          <div class="form-group row">
+
+          <div class="col-md-6">
+              <label for="country">Country</label>
+              <input type="text" class="form-control" id="country" name="country" [(ngModel)]="user.country" />
+          </div>
+          <div class="col-md-6">
+              <label for="city">City</label>
+              <input type="text" class="form-control" id="city" name="city" [(ngModel)]="user.city" />
+          </div> 
+
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-12">
+                <label for="interests">Interests</label>
+                <textarea name="interests" id="interests"  class="form-control" [(ngModel)]="user.interests"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-12">
+                <label for="introduction">Introduction</label>
+                <textarea name="introduction" id="introduction" rows="6"  class="form-control" [(ngModel)]="user.introduction"></textarea>
+            </div>
+        </div>
+
+          <div class="form-group row">
+
+          <div class="col-4"></div>
+          <div class="col-4"></div> 
+          <div class="col-4">
+              <button class="btn btn-primary" [disabled]="canUpdate" (click)="updateUser(user)">Update</button>
+              <button class="btn btn-danger" (click)="hideChildModal(user?.knownAs)">Cancel</button>
+          </div> 
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

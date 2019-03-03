@@ -4,10 +4,11 @@ using Microsoft.Extensions.Options;
 
 namespace DatingApp.API.Business
 {
-    public class CloudinaryBus
+   public abstract class CloudinaryBus
     {
-        public readonly IOptions<CloudinarySettings> _cloudinarySettings;
+        private readonly IOptions<CloudinarySettings> _cloudinarySettings;
         public Cloudinary _cloudinary;
+        public abstract string SelectedPhoto {get;set;} 
 
         public CloudinaryBus(IOptions<CloudinarySettings> cloudinarySettings)
         {
@@ -17,10 +18,11 @@ namespace DatingApp.API.Business
             _cloudinary = new Cloudinary(acc);
         }
 
-        public CloudinaryDotNet.Account GetAcc() => new CloudinaryDotNet.Account(
+        private CloudinaryDotNet.Account GetAcc() => new CloudinaryDotNet.Account(
                 _cloudinarySettings.Value.ApiName,
                 _cloudinarySettings.Value.ApiKey,
                 _cloudinarySettings.Value.ApiSerect
         );
     }
+
 }

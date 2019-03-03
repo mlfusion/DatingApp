@@ -47,7 +47,9 @@ namespace DatingApp.API.Controllers
                     var photoCreation = await _photoBus.AddPhoto(userId, photoForCreationDto);
 
                     if (photoCreation == null)
+                    {
                         return BadRequest("Could not add the photo");
+                    }
 
                     return CreatedAtRoute("GetPhoto", new { id = photoCreation.Id }, photoCreation);
                 }
@@ -91,12 +93,17 @@ namespace DatingApp.API.Controllers
             {
                 try
                 {
+                    _log.Write($"Retrieving photoId={id}.");
                     var photo = await _photoBus.GetPhoto(id);
 
                     if (photo == null)
+                    {
+                        _log.Write($"PhotoId={id} was not found.");
                         return NotFound();
+                    }
 
                     var photoDto = _mapper.Map<PhotoForCreationDto>(photo);
+                   // _log.Write($"Returning photoId={id}. Photo Url");
 
                     return Ok(photoDto); 
                 }
