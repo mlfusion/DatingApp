@@ -13,7 +13,7 @@ export class SettingsUsersResolver implements Resolve<User[]> {
                 private notificationService: NotificationService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
-        return this.userService.getUsers().pipe(
+        return this.userService.getAllUsers(1, 5, '', '', '').pipe(
             catchError(error => {
                 this.notificationService.error('Problem retrieving data settings users');
                 this.router.navigate(['/settings']);

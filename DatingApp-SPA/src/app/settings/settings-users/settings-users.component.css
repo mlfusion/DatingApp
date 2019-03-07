@@ -1,3 +1,7 @@
 .row {
     padding-bottom: 20px !important;
 }
+
+thead th {
+    cursor: pointer;
+}

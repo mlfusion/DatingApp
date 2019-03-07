@@ -34,7 +34,7 @@ namespace DatingApp.API.Common.Paging
             await Task.Yield();
             
             var count = source.Count;
-            var items = source;//.ToListAsync(); // await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            var items = source; //.ToListAsync(); // await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
             return new PagedList<T>(items, totalRows, pageNumber, pageSize);
         }
     }

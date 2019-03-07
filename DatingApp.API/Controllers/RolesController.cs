@@ -36,6 +36,7 @@ namespace DatingApp.API.Controllers
         {
             using(_log.BeginScope())
             {
+                 _log.Write($"Retrieving all roles.");
                 var roles = await _roleBus.GetRolesByQuerySearch(param);
 
                 if (roles == null) {

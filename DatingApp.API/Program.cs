@@ -14,23 +14,23 @@ namespace DatingApp.API
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        // public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-        //     WebHost.CreateDefaultBuilder(args)
-        //         .UseStartup<Startup>();
-///
-        public static IWebHost CreateWebHostBuilder(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
+///
+        // public static IWebHost CreateWebHostBuilder(string[] args) =>
+        //     WebHost.CreateDefaultBuilder(args)
             
-                .ConfigureLogging((hostingContext, builder) =>
-                {
-                    var configuration = hostingContext.Configuration.GetSection("Logging");
-                    builder.AddFile(configuration)
-                           .AddConsole();
-                })
-                .UseStartup<Startup>()
-                .Build();
+        //         .ConfigureLogging((hostingContext, builder) =>
+        //         {
+        //             var configuration = hostingContext.Configuration.GetSection("Logging");
+        //             builder.AddFile(configuration)
+        //                    .AddConsole();
+        //         })
+        //         .UseStartup<Startup>()
+        //         .Build();
      }
 }

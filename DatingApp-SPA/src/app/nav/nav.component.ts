@@ -1,3 +1,4 @@
+import { Ng4LoadingSpinnerModule, Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { AuthService } from './../_services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import UIkit from 'uikit';
@@ -15,20 +16,23 @@ model: any = {};
 photoUrl: string;
 
   constructor(public authService: AuthService, private notificationService: NotificationService,
-              private router: Router) { }
+              private router: Router, private spinner: Ng4LoadingSpinnerService) { }
 
   ngOnInit() {
     this.authService.currentPhotoUrl.subscribe( p => this.photoUrl = p);
   }
 
   login() {
+    this.spinner.show();
     this.authService.login(this.model).subscribe(
       next => {
         console.log('login successfully');
         this.notificationService.success('Logged in successfully');
+        this.spinner.hide();
       }, error => {
         this.notificationService.error(error);
         console.error(error);
+        this.spinner.hide();
       }, () => {
         this.model = {};
         this.router.navigate(['/members']);

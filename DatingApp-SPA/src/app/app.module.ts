@@ -26,6 +26,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
 import {TimeAgoPipe} from 'time-ago-pipe';
+import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 
 import { DataTablesModule } from 'angular-datatables';
 import { AppRoutingModule } from './app-routing.module';
@@ -99,6 +100,7 @@ export function tokenGetters() {
       ModalModule.forRoot(),
       PaginationModule.forRoot(),
       RouterModule.forRoot(appRoutes),
+      Ng4LoadingSpinnerModule.forRoot(),
       JwtModule.forRoot({
          config: {
             tokenGetter: tokenGetters,

@@ -4,9 +4,13 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Base;
+using DatingApp.API.Business;
+using DatingApp.API.Common;
 using DatingApp.API.Common.ActionFilters;
+using DatingApp.API.Common.Paging;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
+using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +19,7 @@ namespace DatingApp.API.Controllers
 {
     
     [Authorize]
-    [ServiceFilter(typeof(UserFilterAttribute))] // Action Filter is in place
+    //[ServiceFilter(typeof(UserFilterAttribute))] // Action Filter is in place
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -23,12 +27,14 @@ namespace DatingApp.API.Controllers
         private readonly IDatingRepository _repo;
         private readonly IMapper _mapper;
         private readonly ILog _log;
+        private readonly IUserBus _userbus;
 
-        public UsersController(IDatingRepository repo, IMapper mapper, ILog log)
+        public UsersController(IDatingRepository repo, IMapper mapper, ILog log, IUserBus userbus)
         {
             _repo = repo;
             _mapper = mapper;
             _log = log;
+            _userbus = userbus;
         }
 
         [HttpGet] 
@@ -48,6 +54,28 @@ namespace DatingApp.API.Controllers
                 var usersToMap = _mapper.Map<IEnumerable<UserForListDto>>(users);
 
                 return Ok(usersToMap);
+            }
+        }
+
+        [HttpGet]
+        [Route("all")] 
+        public async Task<ApiResult<IEnumerable<UserForListDto>>> GetAllUsers([FromQuery] UserParams param)
+        {
+            using(_log.BeginScope())
+            {
+                _log.Write($"Retrieving all active users.");
+                var users = await _userbus.GetUsersByQuerySearch(param);
+
+                if (users == null)
+                    return ApiResult<IEnumerable<UserForListDto>>.NotFound("No users was found.");
+                
+                // Add pagination in response header
+                Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
+
+                // Convert with AutoMapper User => UserForListDto
+                var usersToMap = _mapper.Map<IEnumerable<UserForListDto>>(users);
+
+                return ApiResult<IEnumerable<UserForListDto>>.Ok(usersToMap);
             }
         }
 

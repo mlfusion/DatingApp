@@ -1,3 +1,4 @@
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { RoleService } from 'src/app/_services/role.service';
 import { AuthService } from './../../_services/auth.service';
 import { NotificationService } from 'src/app/_services/notification.service';
@@ -21,7 +22,7 @@ roles: Role[];
 canUpdate = true;
 
   constructor(private userService: UserService, private notificationService: NotificationService, private authService: AuthService,
-              private roleService: RoleService) {
+              private roleService: RoleService, private loader: Ng4LoadingSpinnerService) {
    // console.log('constructor');
    }
 
@@ -50,12 +51,16 @@ canUpdate = true;
 
     console.log(user);
 
+    this.loader.show();
+
     this.userService.updateUser(user.id, user).subscribe(() => {
       this.notificationService.success(user.knownAs + ' has been updated.');
       this.childModal.hide();
+      this.loader.hide();
     }, error => {
       console.error(error);
       this.notificationService.error(error);
+      this.loader.hide();
     });
   }
 

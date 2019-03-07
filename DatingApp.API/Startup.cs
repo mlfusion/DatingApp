@@ -72,9 +72,10 @@ namespace DatingApp.API
             // Added Repository Wrapper
             services.ConfigureRepositoryWrapper();
 
-            // Added IPhotoBus
+            // Added Busuness Interface section
             services.AddScoped<IPhotoBus, PhotoBus>();
             services.AddScoped<IRoleBus, RoleBus>();
+            services.AddScoped<IUserBus, UserBus>();
 
             // Add Cors
             services.AddCors();

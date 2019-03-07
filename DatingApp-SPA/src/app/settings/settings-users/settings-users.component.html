@@ -1,9 +1,9 @@
 <div class="container">
-<form>
+<form [formGroup]="searchForm">
     <div class="form-group row justify-content-end mb-5">
-      <div class="col-6 mb-2">
-          <input class="form-control h-100" name="searchPhoto" [(ngModel)]="searchUser" type="search" placeholder="Search by username" aria-label="Search">
-      </div>
+        <div class="col-6 mb-2">
+            <input class="form-control h-100" formControlName="searchUser" type="text" placeholder="Search by user" aria-label="Search">
+        </div>
     </div>
 </form>
 
@@ -13,23 +13,42 @@
 <table class="table table-hover">
     <thead>
       <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Username</th>
+          <th scope="col" (click)="sortBy('Id')">Id
+              <i class="fa"
+              [ngClass]="{'fa-sort': sortColumn != 'Id', 'fa-sort-asc': sortColumn == 'Id' && sortAsc, 'fa-sort-desc': sortColumn == 'Id' && !sortAsc}"
+              aria-hidden="true"></i>
+          </th>
+          <th scope="col" (click)="sortBy('Username')">Username
+              <i class="fa"
+              [ngClass]="{'fa-sort': sortColumn != 'Username', 'fa-sort-asc': sortColumn == 'Username' && sortAsc, 'fa-sort-desc': sortColumn == 'Username' && !sortAsc}"
+              aria-hidden="true"></i>
+          </th>
         <th scope="col">Gender</th>
         <th scope="col">Created</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users | filter : searchUser"> 
+      <tr *ngFor="let user of users"> 
         <th scope="row">{{user.id}}</th>
         <td>{{user.username}}</td>
         <td>{{user.gender}}</td>
         <td>{{user.created | date}}</td>
-        <td><button class="btn btn-primary" (click)="getUser(user)">view</button></td>
+        <td><button class="btn btn-primary btn-sm" (click)="getUser(user)">view</button></td>
       </tr>
     </tbody>
 </table> 
+
+<div class="d-flex justify-content-center">
+    <pagination
+        [boundaryLinks]="true"
+        [totalItems]="pagination.totalItems"
+        [(ngModel)]="pagination.currentPage"
+        [itemsPerPage]="pagination.itemsPerPage"
+        (pageChanged)="pageChanged($event)"
+      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+    </pagination>
+  </div>
 
    <!-- [] is for @Input, () is for @Output -->
   <app-settings-user-view [user]="user" (statusFromChild)="statusFromChild($event)"></app-settings-user-view>
