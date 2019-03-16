@@ -10,6 +10,7 @@ namespace DatingApp.API.Data
         private IPhotoRepository _photoRespository;
         private IDatingRepository _datingRespository;
         private IRoleRepository _roleRespository;
+        private ILikeRepository _likeRepository;
 
         public RepositoryWrapper(DataContext context, ILog log)
         {
@@ -25,6 +26,17 @@ namespace DatingApp.API.Data
                 return _photoRespository;
             }
         }
+
+        public ILikeRepository Like {
+            get {
+                if (_likeRepository == null)
+                {
+                    _likeRepository = new LikeRepository(_log, _context);
+                }
+                return _likeRepository;
+            }
+        }
+
 
         public IDatingRepository Date {
             get {
@@ -63,5 +75,6 @@ namespace DatingApp.API.Data
         IDatingRepository Date {get;}
         IAuthRepository Auth {get;}
         IRoleRepository Role {get;}
+        ILikeRepository Like {get;}
     }
 }

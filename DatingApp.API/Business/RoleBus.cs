@@ -85,11 +85,8 @@ namespace DatingApp.API.Business
             using (_log.BeginScope())
             {
                 _log.Write("Retrieving all roles");
-
                 var getRoles = await _repository.Role.SelectAsync(x => x.Active == true, 0);
-
                 _log.Write($"{getRoles.Count()} roles found");
-
                 return getRoles;
             }
         }
